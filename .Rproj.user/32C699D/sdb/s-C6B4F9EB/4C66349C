@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Assignment 4\"\nauthor: \"Sihle\"\ndate: \"25 July 2016\"\noutput: github_document\n---\n\n## Hello Octocat\nI love Octocat. she's the collest cat in town.\n![](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/images/octocat.png)\n\n```{r quick_look, echo=FALSE}\ndata(\"anscombe\")\ndim(anscombe)\nnames(anscombe)\nhead(anscombe, n=6)\ntail(anscombe, n=6)\nsummary(anscombe)\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n\n```{r xy_plot, echo=FALSE, fig.height=8, fig.width=8, fig.align='center', fig.path='./figures/', fig.ext='svg'}\ndata(\"anscombe\")\nx=anscombe$x1\ny=anscombe$y1\nplot(x, y)\nabline(lm(y1 ~ x1, data = anscombe))\n```\n---\n\n```{r data_import, echo=TRUE} \ndf <- data.frame('analgesic.csv')\ndf <- read.csv('analgesic.csv')\n```\n\n``````{r data_summary, echo=TRUE}\ndim(df)\nnames(df)\nhead(df, n=6)\ntail(df, n=6)\nsummary(df)\n```\n\n```{r data_tidy, echo=TRUE} \nlibrary(tidyr)\nlibrary(dplyr)\n\ndf_1 <- gather(df, key=Key, value=Value, Measurement_1, Measurement_2, Measurement_3, -ID)\n\ndf_2 <- group_by(df_1, ID, Group)\nsummarise(df_2, Mean=mean(Value))\n```\nNote that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.\n",
+    "created" : 1469444382801.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1802853196",
+    "id" : "4C66349C",
+    "lastKnownWriteTime" : 1469793672,
+    "last_content_update" : 1469793672829,
+    "path" : "C:/Users/Wits-User/Desktop/Assignment 4/README.Rmd",
+    "project_path" : "README.Rmd",
+    "properties" : {
+        "chunk_rendered_width" : "650",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

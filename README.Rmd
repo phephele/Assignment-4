@@ -1,0 +1,54 @@
+---
+title: "Assignment 4"
+author: "Sihle"
+date: "25 July 2016"
+output: github_document
+---
+
+## Hello Octocat
+I love Octocat. she's the collest cat in town.
+![](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/images/octocat.png)
+
+```{r quick_look, echo=FALSE}
+data("anscombe")
+dim(anscombe)
+names(anscombe)
+head(anscombe, n=6)
+tail(anscombe, n=6)
+summary(anscombe)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r xy_plot, echo=FALSE, fig.height=8, fig.width=8, fig.align='center', fig.path='./figures/', fig.ext='svg'}
+data("anscombe")
+x=anscombe$x1
+y=anscombe$y1
+plot(x, y)
+abline(lm(y1 ~ x1, data = anscombe))
+```
+---
+
+```{r data_import, echo=TRUE} 
+df <- data.frame('analgesic.csv')
+df <- read.csv('analgesic.csv')
+```
+
+``````{r data_summary, echo=TRUE}
+dim(df)
+names(df)
+head(df, n=6)
+tail(df, n=6)
+summary(df)
+```
+
+```{r data_tidy, echo=TRUE} 
+library(tidyr)
+library(dplyr)
+
+df_1 <- gather(df, key=Key, value=Value, Measurement_1, Measurement_2, Measurement_3, -ID)
+
+df_2 <- group_by(df_1, ID, Group)
+summarise(df_2, Mean=mean(Value))
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
