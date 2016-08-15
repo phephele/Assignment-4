@@ -1,5 +1,5 @@
 ---
-title: "Assignment 4"
+title: "Assignment 5"
 author: "Sihle"
 date: "25 July 2016"
 output: github_document
@@ -51,4 +51,99 @@ df_1 <- gather(df, key=Key, value=Value, Measurement_1, Measurement_2, Measureme
 df_2 <- group_by(df_1, ID, Group)
 summarise(df_2, Mean=mean(Value))
 ```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#Chunk 1
+## Null hypothesis
+* The Chicks' weights are dependent on the feed
+
+## Alternative Hyphothesis
+* The chicks' weights are not dependent on the feed
+```{r data_import, data_tidy, echo=TRUE}
+x <- read.csv("chick-weights.csv")
+View(x)
+boxplot(x$weight~x$feed)
+
+#anova test
+ chickanova<-aov(weight~feed, data = x)
+ summary(chickanova)
+ 
+#Degrees of freedom and p value
+ df = 5
+ 'p < 0.05'
+"Accept null hypothesis"
+
+
+```
+# Chunk 2
+## Null hypothesis
+* Drinking contaminated water does not cause gastroenteritis
+
+## Alternative Hypothesis
+*drinking contaminated water causes gastroenteritis
+```{r  echo=TRUE}
+library(tidyr)
+s<- read.csv("gastroenteritis (1).csv")
+s1<- xtabs(~Consumption + Outcome, data = s)
+s1
+
+barplot(s1, beside = TRUE, ylab = "Water Consumption (glasses/day)", xlab = "Clinical Presentation", main = "Relationship between Water Consumption and the presentation of Gastroenteritis", col = c("blue", "maroon", "grey"))
+legend("top", c("<1 glasses/day", ">4 glasses/day", "1 to 4 glasses/day"), fill = c("blue", "maroon", "grey"))
+
+#chi squared test
+s2<-chisq.test(s1, correct = TRUE)
+s2
+
+
+```
+#chi squared test assumptions
+*two catergorical variables 
+*determine the realationship between two variables# We reject the null hypothesis because p<0.05
+
+*We reject the null hypothesis because p<0.05
+---
+
+#Chunk 3
+## Null Hypothesis
+*Chemotherapy does not cause nausea
+
+## Alternative Hypothesis
+*Chemotherapy causes nausea
+
+```{r echo=TRUE}
+library(tidyr)
+d <- read.csv("nausea.csv")
+
+#The nausea scale ranges from 0 to 6, thereefore the last reading might have been an error. I have changed to to 4 to have it align with the other readings.
+
+d[8,3]=4
+d
+
+#Plotting the data
+
+plot(d$Nausea_before~d$Patient, type = "l", xlab ="Patients", ylab = "Nausea Rating", ylim= c(0,6))
+lines(d$Nausea_after~d$Patient, col= "green")
+
+legend("top", c("Nausea_before", "Nausea_after"), fill = c("black", "green"))
+
+#Wilcox test
+wilcox.test(d$Nausea_before, d$Nausea_after, paired = TRUE)
+
+
+
+```
+
+## Underlying Assumption
+*Paired and non-parametric data.
+
+*p value<0.05, therefore we reject the null hypothesis.
+
+
+
+
+
+
+
+
+
+
+
