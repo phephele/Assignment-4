@@ -1,5 +1,5 @@
 ---
-title: "Assignment 5"
+title: "Assignment 6"
 author: "Sihle"
 date: "25 July 2016"
 output: github_document
@@ -51,13 +51,13 @@ df_1 <- gather(df, key=Key, value=Value, Measurement_1, Measurement_2, Measureme
 df_2 <- group_by(df_1, ID, Group)
 summarise(df_2, Mean=mean(Value))
 ```
-
+***
 #Chunk 1
 ## Null hypothesis
-* The Chicks' weights are dependent on the feed
+* The Chicks' weights are not dependent on the feed
 
 ## Alternative Hyphothesis
-* The chicks' weights are not dependent on the feed
+* The chicks' weights are dependent on the feed
 ```{r data_import, data_tidy, echo=TRUE}
 x <- read.csv("chick-weights.csv")
 View(x)
@@ -74,12 +74,13 @@ boxplot(x$weight~x$feed)
 
 
 ```
+***
 # Chunk 2
 ## Null hypothesis
 * Drinking contaminated water does not cause gastroenteritis
 
 ## Alternative Hypothesis
-*drinking contaminated water causes gastroenteritis
+* Drinking contaminated water causes gastroenteritis
 ```{r  echo=TRUE}
 library(tidyr)
 s<- read.csv("gastroenteritis (1).csv")
@@ -96,18 +97,19 @@ s2
 
 ```
 #chi squared test assumptions
-*two catergorical variables 
-*determine the realationship between two variables# We reject the null hypothesis because p<0.05
+* Two catergorical variables 
+* Determine the realationship between two variables# We reject the null hypothesis because p<0.05
 
-*We reject the null hypothesis because p<0.05
----
+* We reject the null hypothesis because p<0.05
+
+***
 
 #Chunk 3
 ## Null Hypothesis
-*Chemotherapy does not cause nausea
+* Chemotherapy does not cause nausea
 
 ## Alternative Hypothesis
-*Chemotherapy causes nausea
+* Chemotherapy causes nausea
 
 ```{r echo=TRUE}
 library(tidyr)
@@ -133,14 +135,69 @@ wilcox.test(d$Nausea_before, d$Nausea_after, paired = TRUE)
 ```
 
 ## Underlying Assumption
-*Paired and non-parametric data.
+* Paired and non-parametric data.
 
-*p value<0.05, therefore we reject the null hypothesis.
+* P value<0.05, therefore we reject the null hypothesis.
+
+***
+
+#Assignment 6
+
+#Chunk 1
+##Null Hypothesis
+* There is no association between the median house prices and the interest rates.  
+
+##Alternative Hypothesis
+* There is an association between the median house prices and the interest rates.
+
+
+```{r echo=TRUE, fig.height=6, fig.width=6, fig.align='center'}
+housing <- read.csv('housing-prices.csv')
+housing
+
+#scatter plot
+plot(x=housing$interest_rate, y=housing$median_house_price_USD, ylab = 'Median House Price (USD)', xlab = 'Interest Rate', main = 'Relatinship between Housing Prices and Interest Rates.', pch = 19, col = 'red')
+abline( lm(housing$median_house_price_USD ~ housing$interest_rate, data= housing), lwd = 2, col = 'navy')
+
+
+#linear regression
+housing.reg <- lm(housing$median_house_price_USD ~ housing$interest_rate, data= housing)
+summary(housing.reg)
+
+#diagnostic plot 1-qqplot
+qqnorm(housing.reg$residuals, pch = 19)
+qqline(housing.reg$residuals, col = 'grey', lwd = 3)
+
+#diagnostic plot 2-homoskedasticity
+plot(x=housing.reg$fitted.values, y=housing.reg$residuals, col = 'purple', main = 'Fitted Values vs Residuals', xlab = 'Fitted Values', ylab = 'Residuals')
+abline(h = 0, col = 'pink')
+
+#generalised linear regression
+housing.reg2 <- glm(housing$median_house_price_USD ~ housing$interest_rate, data= housing)
+summary(housing.reg2)
 
 
 
 
+```
 
+##Linear regression Assumptions
+* The residuals are normally distributed
+* x variable was measured with no error
+* There is a linear trend between x and y
+
+##Diagnostics
+* The residuals dont appear to be normally distributed as most of the points dont fall within the line.
+* The variance of the residuals increases as the fitted values increase. The residuals are heteroskedastic, thus violating the assumptions for linear regression. 
+
+* I have used a generalised linear regression instead.
+
+
+
+##Outcomes
+* df=15
+* p=0.02
+* we reject the null hypothesis. There is an inverse association between the median house prices and the interest rates.
 
 
 
