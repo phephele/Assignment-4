@@ -1,4 +1,4 @@
-Assignment 5
+Assignment 6
 ================
 Sihle
 25 July 2016
@@ -147,18 +147,20 @@ summarise(df_2, Mean=mean(Value))
     ## 10    10 Analgesic 24.00000
     ## # ... with 30 more rows
 
+------------------------------------------------------------------------
+
 Chunk 1
 =======
 
 Null hypothesis
 ---------------
 
--   The Chicks' weights are dependent on the feed
+-   The Chicks' weights are not dependent on the feed
 
 Alternative Hyphothesis
 -----------------------
 
--   The chicks' weights are not dependent on the feed
+-   The chicks' weights are dependent on the feed
 
 ``` r
 x <- read.csv("chick-weights.csv")
@@ -194,6 +196,8 @@ boxplot(x$weight~x$feed)
 
     ## [1] "Accept null hypothesis"
 
+------------------------------------------------------------------------
+
 Chunk 2
 =======
 
@@ -205,7 +209,7 @@ Null hypothesis
 Alternative Hypothesis
 ----------------------
 
-\*drinking contaminated water causes gastroenteritis
+-   Drinking contaminated water causes gastroenteritis
 
 ``` r
 library(tidyr)
@@ -242,9 +246,12 @@ s2
 chi squared test assumptions
 ============================
 
-*two catergorical variables *determine the realationship between two variables\# We reject the null hypothesis because p&lt;0.05
+-   Two catergorical variables
+-   Determine the realationship between two variables\# We reject the null hypothesis because p&lt;0.05
 
-\*We reject the null hypothesis because p&lt;0.05 ---
+-   We reject the null hypothesis because p&lt;0.05
+
+------------------------------------------------------------------------
 
 Chunk 3
 =======
@@ -252,12 +259,12 @@ Chunk 3
 Null Hypothesis
 ---------------
 
-\*Chemotherapy does not cause nausea
+-   Chemotherapy does not cause nausea
 
 Alternative Hypothesis
 ----------------------
 
-\*Chemotherapy causes nausea
+-   Chemotherapy causes nausea
 
 ``` r
 library(tidyr)
@@ -308,6 +315,152 @@ wilcox.test(d$Nausea_before, d$Nausea_after, paired = TRUE)
 Underlying Assumption
 ---------------------
 
-\*Paired and non-parametric data.
+-   Paired and non-parametric data.
 
-\*p value&lt;0.05, therefore we reject the null hypothesis.
+-   P value&lt;0.05, therefore we reject the null hypothesis.
+
+------------------------------------------------------------------------
+
+Assignment 6
+============
+
+Chunk 1
+=======
+
+Null Hypothesis
+---------------
+
+-   There is no association between the median house prices and the interest rates.
+
+Alternative Hypothesis
+----------------------
+
+-   There is an association between the median house prices and the interest rates.
+
+``` r
+housing <- read.csv('housing-prices.csv')
+housing
+```
+
+    ##    interest_rate median_house_price_USD
+    ## 1             10                 183800
+    ## 2             10                 183200
+    ## 3             10                 174900
+    ## 4              9                 173500
+    ## 5              8                 172900
+    ## 6              7                 173200
+    ## 7              8                 173200
+    ## 8              8                 169700
+    ## 9              8                 174500
+    ## 10             8                 177900
+    ## 11             7                 188100
+    ## 12             7                 203200
+    ## 13             8                 230200
+    ## 14             7                 258200
+    ## 15             7                 309800
+    ## 16             6                 329800
+    ## 17            NA                     NA
+
+``` r
+#scatter plot
+plot(x=housing$interest_rate, y=housing$median_house_price_USD, ylab = 'Median House Price (USD)', xlab = 'Interest Rate', main = 'Relatinship between Housing Prices and Interest Rates.', pch = 19, col = 'red')
+abline( lm(housing$median_house_price_USD ~ housing$interest_rate, data= housing), lwd = 2, col = 'navy')
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+
+``` r
+#linear regression
+housing.reg <- lm(housing$median_house_price_USD ~ housing$interest_rate, data= housing)
+summary(housing.reg)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = housing$median_house_price_USD ~ housing$interest_rate, 
+    ##     data = housing)
+    ## 
+    ## Residuals:
+    ##    Min     1Q Median     3Q    Max 
+    ## -55865 -31631 -16406  27212  80735 
+    ## 
+    ## Coefficients:
+    ##                       Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)             399229      74427   5.364 9.99e-05 ***
+    ## housing$interest_rate   -24309       9205  -2.641   0.0194 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 43180 on 14 degrees of freedom
+    ##   (1 observation deleted due to missingness)
+    ## Multiple R-squared:  0.3325, Adjusted R-squared:  0.2848 
+    ## F-statistic: 6.974 on 1 and 14 DF,  p-value: 0.01937
+
+``` r
+#diagnostic plot 1-qqplot
+qqnorm(housing.reg$residuals, pch = 19)
+qqline(housing.reg$residuals, col = 'grey', lwd = 3)
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-3-2.png" style="display: block; margin: auto;" />
+
+``` r
+#diagnostic plot 2-homoskedasticity
+plot(x=housing.reg$fitted.values, y=housing.reg$residuals, col = 'purple', main = 'Fitted Values vs Residuals', xlab = 'Fitted Values', ylab = 'Residuals')
+abline(h = 0, col = 'pink')
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-3-3.png" style="display: block; margin: auto;" />
+
+``` r
+#generalised linear regression
+housing.reg2 <- glm(housing$median_house_price_USD ~ housing$interest_rate, data= housing)
+summary(housing.reg2)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = housing$median_house_price_USD ~ housing$interest_rate, 
+    ##     data = housing)
+    ## 
+    ## Deviance Residuals: 
+    ##    Min      1Q  Median      3Q     Max  
+    ## -55865  -31631  -16406   27212   80735  
+    ## 
+    ## Coefficients:
+    ##                       Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)             399229      74427   5.364 9.99e-05 ***
+    ## housing$interest_rate   -24309       9205  -2.641   0.0194 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for gaussian family taken to be 1864095540)
+    ## 
+    ##     Null deviance: 3.9098e+10  on 15  degrees of freedom
+    ## Residual deviance: 2.6097e+10  on 14  degrees of freedom
+    ##   (1 observation deleted due to missingness)
+    ## AIC: 390.81
+    ## 
+    ## Number of Fisher Scoring iterations: 2
+
+Linear regression Assumptions
+-----------------------------
+
+-   The residuals are normally distributed
+-   x variable was measured with no error
+-   There is a linear trend between x and y
+
+Diagnostics
+-----------
+
+-   The residuals dont appear to be normally distributed as most of the points dont fall within the line.
+-   The variance of the residuals increases as the fitted values increase. The residuals are heteroskedastic, thus violating the assumptions for linear regression.
+
+-   I have used a generalised linear regression instead.
+
+Outcomes
+--------
+
+-   df=15
+-   p=0.02
+-   we reject the null hypothesis. There is an inverse association between the median house prices and the interest rates.
